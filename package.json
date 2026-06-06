@@ -4,6 +4,7 @@
   "private": true,
   "description": "An open-source gamified platform that teaches Stellar blockchain development through 2D pixel-art adventure gameplay.",
   "license": "MIT",
+  "packageManager": "npm@11.8.0",
   "workspaces": [
     "apps/*",
     "packages/*",
