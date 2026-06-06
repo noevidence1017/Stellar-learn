@@ -1,0 +1,21 @@
+# Pixel-art assets
+
+Drop real PNG sprites here to replace the labelled placeholder slots used by
+the game UI (`<SpriteSlot>`). The UI is laid out at native 1x and rendered at
+2x via `image-rendering: pixelated`, so export art at the native sizes below.
+
+| Asset                | Native size | Slot label example              |
+| -------------------- | ----------- | ------------------------------- |
+| Player characters    | 128×128px   | `char-validator_idle · 128²`    |
+| Enemies              | 128×128px   | `doubter_walk · 128²`           |
+| Bosses               | 256×256px   | `boss-doubt-wraith_idle · 256²` |
+| Tiles                | 64×64px     | `world-1_tileset_ground`        |
+| Collectibles / icons | 32×32px     | `xlm-coin`                      |
+| UI badges            | 64×64px     | `badge-account-created`         |
+| Lesson illustration  | 480×110px   | `quest_keypair_art · 480×110`   |
+
+Spritesheets use a horizontal-strip layout (consistent frame size per
+animation) compatible with Phaser's `this.load.spritesheet()`. Naming follows
+`char-validator_idle.png`, `world-1_tileset_ground.png`, `ui_xp-bar.png`.
+
+Colours must match the brand palette exactly (see `tailwind.config.ts`).
