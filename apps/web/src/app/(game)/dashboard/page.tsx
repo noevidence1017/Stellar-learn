@@ -2,8 +2,13 @@ import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { worlds } from '@stellar-learn/content'
+import { clerkEnabled } from '@/lib/auth'
 
 export default async function DashboardPage() {
+  // Without Clerk configured there is no auth session; point visitors to the
+  // publicly viewable game UI instead of crashing on currentUser().
+  if (!clerkEnabled) redirect('/game')
+
   const user = await currentUser()
   if (!user) redirect('/sign-in')
 

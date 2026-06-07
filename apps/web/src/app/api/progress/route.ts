@@ -1,8 +1,11 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { prisma } from '@stellar-learn/database'
+import { clerkEnabled } from '@/lib/auth'
 
 export async function GET() {
+  if (!clerkEnabled) return NextResponse.json({ error: 'Auth not configured' }, { status: 401 })
+
   const { userId: clerkId } = auth()
   if (!clerkId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -19,6 +22,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!clerkEnabled) return NextResponse.json({ error: 'Auth not configured' }, { status: 401 })
+
   const { userId: clerkId } = auth()
   if (!clerkId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
