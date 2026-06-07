@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { ClerkProvider } from '@clerk/nextjs'
 import { Inter } from 'next/font/google'
+import { clerkEnabled } from '@/lib/auth'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -18,17 +19,19 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <ClerkProvider>
-      <html lang="en" className={inter.variable}>
-        <head>
-          <link
-            href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=JetBrains+Mono:wght@400;500&display=swap"
-            rel="stylesheet"
-          />
-        </head>
-        <body className="bg-brand-dark text-brand-gold antialiased">{children}</body>
-      </html>
-    </ClerkProvider>
+  const html = (
+    <html lang="en" className={inter.variable}>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=JetBrains+Mono:wght@400;500&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="bg-brand-dark text-brand-gold antialiased">{children}</body>
+    </html>
   )
+
+  // Only mount ClerkProvider when auth is configured; otherwise the app still
+  // renders (e.g. /game) without requiring Clerk keys or network access.
+  return clerkEnabled ? <ClerkProvider>{html}</ClerkProvider> : html
 }
