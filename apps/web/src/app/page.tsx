@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { SignedIn, SignedOut } from '@clerk/nextjs'
+import { GuestOnly, AuthedOnly } from '@/components/auth/AuthGate'
 
 export default function LandingPage() {
   return (
@@ -21,7 +21,7 @@ export default function LandingPage() {
           >
             ▶ Preview UI
           </Link>
-          <SignedOut>
+          <GuestOnly>
             <Link
               href="/sign-in"
               className="font-pixel text-xs text-brand-gold/70 transition hover:text-brand-gold"
@@ -31,12 +31,12 @@ export default function LandingPage() {
             <Link href="/sign-up" className="btn-pixel">
               Start Adventure
             </Link>
-          </SignedOut>
-          <SignedIn>
+          </GuestOnly>
+          <AuthedOnly>
             <Link href="/dashboard" className="btn-pixel">
               Continue Journey
             </Link>
-          </SignedIn>
+          </AuthedOnly>
         </div>
       </nav>
 
@@ -60,16 +60,16 @@ export default function LandingPage() {
         </p>
 
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-          <SignedOut>
+          <GuestOnly>
             <Link href="/sign-up" className="btn-pixel text-sm">
               ▶ Start Your Quest
             </Link>
-          </SignedOut>
-          <SignedIn>
+          </GuestOnly>
+          <AuthedOnly>
             <Link href="/dashboard" className="btn-pixel text-sm">
               ▶ Continue Quest
             </Link>
-          </SignedIn>
+          </AuthedOnly>
           <a
             href="https://github.com/noevidence1017/Stellar-learn"
             target="_blank"
@@ -130,16 +130,16 @@ export default function LandingPage() {
           Join thousands of builders learning Stellar through the most unique educational experience
           in blockchain.
         </p>
-        <SignedOut>
+        <GuestOnly>
           <Link href="/sign-up" className="btn-pixel text-sm">
             ▶ Begin Your Journey — It&apos;s Free
           </Link>
-        </SignedOut>
-        <SignedIn>
+        </GuestOnly>
+        <AuthedOnly>
           <Link href="/dashboard" className="btn-pixel text-sm">
             ▶ Continue Your Journey
           </Link>
-        </SignedIn>
+        </AuthedOnly>
       </section>
     </main>
   )
