@@ -118,6 +118,27 @@ stellar-learn/
 - [ ] Mobile-responsive game view
 - [ ] Storybook component library
 - [ ] i18n (multi-language support)
+- [ ] **Study Groups** — players form small groups for cooperative study:
+      shared progress, group quests/challenges, and a private group leaderboard.
+
+### Planned: Study Groups
+
+A social layer where a player can create or join a **study group** (think a guild
+or party). Planned scope:
+
+- Create a group with an invite code / link; members join and see each other.
+- A **group dashboard** showing each member's world progress and combined XP.
+- **Group challenges** — quests that unlock once enough members complete them,
+  encouraging members to help one another.
+- A **private group leaderboard** alongside the global one (Upstash Redis sorted
+  sets, same pattern as the existing leaderboard).
+- Optional **co-op boss battles** where group members' combined quiz scores power
+  the fight.
+
+This is a future feature — tracked here so contributors can design data models
+(extend `packages/database/`) and APIs around it early. See also
+[`ASSETS.md`](ASSETS.md) for the art a group UI would need (member avatars,
+group badges).
 
 ---
 

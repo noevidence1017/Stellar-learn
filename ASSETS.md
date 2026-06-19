@@ -1,0 +1,209 @@
+# Stellar Learn — Complete Asset Manifest
+
+> Everything the game needs in the way of **art, audio, and map data**, with the
+> exact sizes, frame layouts, file paths and naming the engine code expects.
+> Drop finished files into `apps/web/public/assets/...` and flip
+> `ART_ASSETS_AVAILABLE` to `true` in
+> [`packages/game-engine/src/config.ts`](packages/game-engine/src/config.ts).
+
+**Global rules**
+- The renderer runs in `pixelArt: true` mode — export crisp pixel art, **no
+  anti-aliasing**, indexed/limited palette.
+- Spritesheets use a **fixed frame size** in a grid, read left→right, top→bottom
+  (Phaser `this.load.spritesheet()` / `generateFrameNumbers`).
+- Match the brand palette in
+  [`apps/web/tailwind.config.ts`](apps/web/tailwind.config.ts) (purple `#7b5ea7`,
+  gold/parchment `#e8d5b7`, teal `#00bcd4`, dark `#1a1a2e`).
+- `TILE_SIZE = 64`, game canvas `1280×720` (see `config.ts`).
+
+---
+
+## 1. Player Characters — `assets/sprites/characters/`
+
+Six selectable characters (see `ASSET_KEYS` in `config.ts`):
+`warrior`, `mage`, `archer`, `rogue`, `paladin`, `necromancer`.
+
+| Property | Value |
+|---|---|
+| File | `char-<id>.png` e.g. `char-warrior.png` |
+| Frame size | **128×128 px** |
+| Layout | **8 columns × 5 rows** (1024×640 px sheet) |
+| Loaded by | `LevelScene.preload()` |
+
+**Frame map (the engine reads these exact indices — see
+`LevelScene.createAnimations()`):**
+
+| Animation | Frame indices | Grid position | Notes |
+|---|---|---|---|
+| `idle`   | 0–3   | row 0, cols 0–3 | loops |
+| `run`    | 8–13  | row 1, cols 0–5 | loops |
+| `jump`   | 16–19 | row 2, cols 0–3 | one-shot |
+| `attack` | 24–29 | row 3, cols 0–5 | one-shot |
+| `death`/`defeat` | 32–37 | row 4, cols 0–5 | **add this row** for boss battles (Issue #4) |
+
+> Because indices jump in multiples of 8, each animation must start at the **left
+> edge of its own row** — i.e. export 8 columns even if an animation uses fewer.
+> Unused cells in a row can be blank.
+
+---
+
+## 2. Enemies — `assets/sprites/enemies/`
+
+Walking/idle hazards encountered while platforming (one+ per world theme).
+
+| Property | Value |
+|---|---|
+| File | `enemy-<name>.png` e.g. `enemy-doubter.png` |
+| Frame size | **128×128 px** |
+| Layout | 8 cols × 2 rows (walk row, hurt/death row) |
+| Animations | `walk` (0–5), `death` (8–13) |
+
+Suggested enemies by world theme: `doubter` (forest), `key-thief` (castle),
+`counterfeiter` (dungeon), `scalper` (mountain), `fraudster` (payment),
+`null-pointer` (citadel).
+
+---
+
+## 3. Bosses — `assets/sprites/bosses/`
+
+One boss per world. Names already defined in `packages/content/src/worlds/`:
+
+| World | Boss | File |
+|---|---|---|
+| 1 Origin Plains | **The Doubt Wraith** | `boss-doubt-wraith.png` |
+| 2 Wallet Kingdom | **The Key Crusher** | `boss-key-crusher.png` |
+| 3 Asset Forge | **The Trust Breaker** | `boss-trust-breaker.png` |
+| 4 Trading Bazaar | *TBD* | `boss-<name>.png` |
+| 5 Payment Realm | *TBD* | `boss-<name>.png` |
+| 6 Soroban Citadel | *TBD (final boss)* | `boss-<name>.png` |
+
+| Property | Value |
+|---|---|
+| Frame size | **256×256 px** |
+| Layout | 6 cols × 4 rows |
+| Animations | `idle` (0–5), `attack` (6–11), `hurt` (12–17), `defeat` (18–23) |
+
+Needed by Issue #4 (boss-battle sequence). Bosses 4–6 need names authored in
+content first (Issue #7 covers 2–3; worlds 4–6 are future content).
+
+---
+
+## 4. Tilesets + Maps — `assets/tilesets/` and `assets/maps/`
+
+The platformer level geometry. One tileset image + one Tiled map per world.
+
+| Property | Value |
+|---|---|
+| Tileset file | `<worldId>.png` e.g. `world-1-origin-plains.png` |
+| Tile size | **64×64 px** |
+| Map file | `<worldId>.json` (Tiled JSON export) |
+| Loaded by | `LevelScene.preload()` / `createMap()` |
+
+**Map layer contract (must match `LevelScene.createMap()` exactly):**
+- Tileset name inside the map must be `tileset`.
+- Layers, in order: `Background`, `Ground`, `Foreground`.
+- Collidable ground tiles must have a custom boolean property **`collides: true`**.
+
+Themes (from `WorldTheme`): `forest`, `castle`, `dungeon`, `mountain`,
+`castle-dungeon`, `citadel`. Each tileset needs ground, platforms, edges,
+decorative props, and a parallax background strip.
+
+Build maps with **[Tiled](https://www.mapeditor.org/)** (free).
+
+---
+
+## 5. UI — `assets/ui/`
+
+| File | Size | Used by |
+|---|---|---|
+| `xp-bar.png` | 256×24 px (9-slice friendly) | `BootScene` (`UI_XP_BAR`) |
+| `health-bar.png` | 256×24 px | `BootScene` (`UI_HEALTH_BAR`) |
+| `quest-panel.png` | 480×320 px frame | `UI_QUEST_PANEL` |
+
+---
+
+## 6. Achievement Badges — `assets/badges/`
+
+| Property | Value |
+|---|---|
+| File | `badge-<slug>.png` e.g. `badge-account-created.png` |
+| Size | **64×64 px** |
+
+One per milestone (first quest, world cleared, account created, asset issued,
+testnet payment, etc.). Ties into the BADGES screen and future NFT certificates.
+
+---
+
+## 7. Effects / Collectibles — `assets/effects/`
+
+| File | Frame size | Used by |
+|---|---|---|
+| `coin.png` | 32×32 spritesheet (spin, ~8 frames) | `BootScene` (`FX_COIN`) |
+| `levelup.png` | 64×64 spritesheet (burst, ~8 frames) | `BootScene` (`FX_LEVELUP`) |
+| `correct.png` | 64×64 spritesheet | quiz feedback (`FX_CORRECT`) |
+| `wrong.png` | 64×64 spritesheet | quiz feedback (`FX_WRONG`) |
+| `xlm-coin.png` | 32×32 | collectible XLM token |
+
+---
+
+## 8. Lesson Illustrations — `assets/illustrations/`
+
+Optional in-quest concept art for `LessonBlock` of `type: 'image'`.
+
+| Property | Value |
+|---|---|
+| File | `quest-<slug>.png` e.g. `quest-keypair.png` |
+| Size | **480×110 px** (banner) |
+
+---
+
+## 9. Audio — `assets/audio/bgm/` and `assets/audio/sfx/`
+
+Web Audio is enabled (`config.ts`). Use `.ogg` (+ `.mp3` fallback), loop BGM.
+
+**Music (bgm):** one looping track per world theme — `bgm-forest.ogg`,
+`bgm-castle.ogg`, `bgm-dungeon.ogg`, `bgm-mountain.ogg`, `bgm-payment.ogg`,
+`bgm-citadel.ogg`, plus `bgm-boss.ogg` and `bgm-victory.ogg`.
+
+**SFX:** `sfx-jump`, `sfx-coin`, `sfx-quest-open`, `sfx-correct`, `sfx-wrong`,
+`sfx-levelup`, `sfx-boss-hit`, `sfx-victory`, `sfx-defeat`.
+
+> Audio loading isn't wired in the engine yet — it pairs with the boss/quest
+> work (Issues #3, #4, #9). Adding the files now is safe; wiring follows.
+
+---
+
+## Fonts
+
+The UI font is **"Press Start 2P"** (loaded via Google Fonts in the web app) —
+no asset file needed, but keep using it for all in-game text for consistency.
+
+---
+
+## Where to get / make assets
+
+**Make:** [Aseprite](https://www.aseprite.org/) (sprites, paid) ·
+[Piskel](https://www.piskelapp.com/) (free, browser) ·
+[LibreSprite](https://libresprite.github.io/) (free) ·
+[Tiled](https://www.mapeditor.org/) (maps, free).
+
+**Source (check licenses — prefer CC0 / clearly-licensed):**
+[itch.io game assets](https://itch.io/game-assets/free/tag-pixel-art) ·
+[OpenGameArt](https://opengameart.org/) ·
+[Kenney.nl](https://kenney.nl/assets) (CC0) ·
+[CraftPix](https://craftpix.net/) (the pack CLAUDE.md references — license must be
+confirmed before committing files; see Issue #8).
+
+**License rule:** only commit assets we have the right to redistribute under the
+repo's MIT license, or keep them in `public/` with their own attribution noted in
+this file. When in doubt, link the source instead of committing the binary.
+
+---
+
+## Priority order (what unblocks the most)
+
+1. **One character** (`char-warrior.png`) + **World 1 tileset/map** → makes the
+   real game look like a game (Issues #2, #8).
+2. **The Doubt Wraith boss** → unblocks the boss battle (Issue #4).
+3. **Coin + levelup effects** → reward feedback (Issue #9).
+4. Remaining characters, worlds 2–3 tilesets, then worlds 4–6.

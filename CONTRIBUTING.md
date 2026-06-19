@@ -150,6 +150,15 @@ npm run test
 - https://developers.stellar.org/docs/build/
 - https://stellar.org/blog
 
+### Contributing Art & Audio
+
+All required assets — sprites, tilesets, maps, UI, effects, audio — are spec'd
+with exact sizes, frame layouts, file paths and naming in
+[`ASSETS.md`](ASSETS.md). Drop finished files into `apps/web/public/assets/...`
+(folders are scaffolded) and flip `ART_ASSETS_AVAILABLE` in
+`packages/game-engine/src/config.ts`. **Only commit assets we may redistribute
+under MIT**, or link the source instead.
+
 ### Adding a Game Scene
 
 1. Create your scene in `packages/game-engine/src/scenes/`
