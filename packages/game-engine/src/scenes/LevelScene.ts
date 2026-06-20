@@ -112,7 +112,7 @@ export class LevelScene extends Phaser.Scene {
     g.destroy()
   }
 
-  update() {
+  override update() {
     if (this.isInteracting) return
     this.handleMovement()
     this.updateAnimations()

@@ -1,4 +1,7 @@
-import type Phaser from 'phaser'
+// Value import (not `import type`): DEFAULT_PHASER_CONFIG below uses Phaser enum
+// values (Phaser.AUTO, Phaser.Scale.*) at runtime. This file is only ever pulled
+// in through GameCanvas's dynamic client-side import, so it never runs on the server.
+import Phaser from 'phaser'
 
 export const GAME_WIDTH = 1280
 export const GAME_HEIGHT = 720
