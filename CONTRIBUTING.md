@@ -69,6 +69,11 @@ The highest-impact area right now is **content**. We need:
 Each world needs **5 lesson quests + 1 quiz quest**.
 See `world-1-origin-plains.ts` as the template. It's the most impactful single file you can contribute.
 
+New to quest content? [`docs/AUTHORING-QUESTS.md`](docs/AUTHORING-QUESTS.md)
+walks through the `Quest`/`LessonBlock`/`QuizQuestion`/`ChallengeSpec` shapes
+with annotated examples and copy-paste templates — start there before opening
+your editor.
+
 ---
 
 ## Setup
@@ -144,6 +149,11 @@ npm run test
 3. Update all the content — follow the `World` type in `packages/content/src/curriculum/types.ts`
 4. Register it in `packages/content/src/worlds/index.ts`
 5. Submit a PR
+
+**Read this first:** [`docs/AUTHORING-QUESTS.md`](docs/AUTHORING-QUESTS.md) —
+a full guide to the `Quest`, `LessonBlock`, `QuizQuestion`, and `ChallengeSpec`
+shapes with annotated real examples, copy-paste quest templates, and sourcing/
+tone guidelines. It'll save you several rounds of PR review.
 
 **Resources for content:**
 - https://developers.stellar.org/docs/learn/
